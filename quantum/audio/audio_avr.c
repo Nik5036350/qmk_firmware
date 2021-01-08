@@ -110,6 +110,18 @@
 #    define TIMER_1_DUTY_CYCLE OCR1C
 #    define TIMER1_AUDIO_vect TIMER1_COMPC_vect
 #endif
+#if defined(D5_AUDIO)
+#    define BPIN_AUDIO
+    #define BPIN_SET_DIRECTION DDRD |= _BV(PORTD5);
+    #define INIT_AUDIO_COUNTER_1 TCCR1A = (0 << COM1A1) | (0 << COM1A0) | (1 << WGM11) | (0 << WGM10);
+    #define ENABLE_AUDIO_COUNTER_1_ISR TIMSK |= _BV(OCIE1A)
+    #define DISABLE_AUDIO_COUNTER_1_ISR TIMSK &= ~_BV(OCIE1A)
+    #define ENABLE_AUDIO_COUNTER_1_OUTPUT TCCR1A |= _BV(COM1A1);
+    #define DISABLE_AUDIO_COUNTER_1_OUTPUT TCCR1A &= ~(_BV(COM1A1) | _BV(COM1A0));
+    #define TIMER_1_PERIOD     ICR1
+    #define TIMER_1_DUTY_CYCLE OCR1A
+    #define TIMER1_AUDIO_vect TIMER1_COMPA_vect
+#endif
 
 #if !defined(BPIN_AUDIO) && !defined(CPIN_AUDIO)
 #    error "Audio feature enabled, but no suitable pin selected - see docs/feature_audio.md under the AVR settings for available options."
